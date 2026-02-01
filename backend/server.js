@@ -2,17 +2,22 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const fs = require('fs');
+const path = require('path');
+
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log(`Created uploads directory at: ${uploadDir}`);
+}
 
 const app = express();
 
-// Connect to Database
 connectDB();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/resume', require('./routes/resumeRoutes'));
 app.use('/api/interview', require('./routes/interviewRoutes'));
